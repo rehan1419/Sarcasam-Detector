@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Sarcasm Gazette</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="page">
+
+    <header class="masthead">
+      <p class="masthead__eyebrow">Est. today &middot; Trained on 55,000+ headlines</p>
+      <h1 class="masthead__title">The Sarcasm Gazette</h1>
+      <p class="masthead__tagline">&ldquo;All the news that's probably not fit to print&rdquo;</p>
+      <div class="masthead__rule"></div>
+    </header>
+
+    {% if model_error %}
+    <div class="notice notice--error">
+      <strong>Presses are down.</strong> {{ model_error }}
+    </div>
+    {% endif %}
+
+    <main class="desk">
+      <section class="submit-box">
+        <p class="submit-box__label">Submit a headline for review</p>
+        <form action="/predict" method="post" class="submit-form">
+          <input
+            type="text"
+            name="headline"
+            class="submit-form__input"
+            placeholder="e.g. Local Man Discovers Motivation, Loses It Again By Noon"
+            value="{{ headline or '' }}"
+            autocomplete="off"
+            {% if model_error %}disabled{% endif %}
+          />
+          <button type="submit" class="submit-form__button" {% if model_error %}disabled{% endif %}>
+            Run the desk check
+          </button>
+        </form>
+        {% if error %}
+        <p class="submit-box__error">{{ error }}</p>
+        {% endif %}
+      </section>
+
+      {% if label %}
+      <section class="verdict">
+        <div class="clipping">
+          <p class="clipping__eyebrow">Headline under review</p>
+          <p class="clipping__headline">&ldquo;{{ headline }}&rdquo;</p>
+          <div class="stamp {{ 'stamp--sarcastic' if is_sarcastic else 'stamp--sincere' }}">
+            {{ label }}
+          </div>
+          <p class="clipping__meta">Editor's confidence score: {{ score }}</p>
+        </div>
+      </section>
+      {% endif %}
+    </main>
+
+    <footer class="colophon">
+      <p>Powered by a TF&#8209;IDF + Linear SVM newsroom intern. Model trained on headlines from The Onion and HuffPost.</p>
+    </footer>
+
+  </div>
+</body>
+</html>

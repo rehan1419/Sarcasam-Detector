@@ -1,0 +1,240 @@
+:root {
+  --newsprint: #EDE8DC;
+  --newsprint-dark: #DED6C4;
+  --ink: #1B1B1B;
+  --ink-soft: #4A4640;
+  --stamp-red: #B23A2E;
+  --stamp-green: #2E5339;
+  --rule: #1B1B1B;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--newsprint);
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+  background-size: 3px 3px;
+  color: var(--ink);
+  font-family: 'Courier Prime', monospace;
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px 64px;
+}
+
+.page {
+  width: 100%;
+  max-width: 640px;
+}
+
+/* ---------- Masthead ---------- */
+
+.masthead {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.masthead__eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.masthead__title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(2.4rem, 9vw, 3.4rem);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.masthead__tagline {
+  margin: 6px 0 16px;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.masthead__rule {
+  height: 3px;
+  background: var(--rule);
+  position: relative;
+}
+
+.masthead__rule::before,
+.masthead__rule::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+}
+
+.masthead__rule::before { top: 5px; }
+.masthead__rule::after { top: 8px; }
+
+/* ---------- Notice ---------- */
+
+.notice {
+  border: 1px dashed var(--stamp-red);
+  color: var(--stamp-red);
+  padding: 12px 16px;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+/* ---------- Submit box ---------- */
+
+.desk {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.submit-box {
+  border: 1px solid var(--ink);
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.submit-box__label {
+  margin: 0 0 12px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.submit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.submit-form__input {
+  font-family: 'Courier Prime', monospace;
+  font-size: 15px;
+  padding: 12px;
+  border: 1px solid var(--ink);
+  background: var(--newsprint);
+  color: var(--ink);
+}
+
+.submit-form__input:focus {
+  outline: 2px solid var(--stamp-green);
+  outline-offset: 2px;
+}
+
+.submit-form__button {
+  align-self: flex-start;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--newsprint);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.submit-form__button:hover {
+  transform: translateY(-1px);
+}
+
+.submit-form__button:active {
+  transform: translateY(0);
+}
+
+.submit-form__button:disabled,
+.submit-form__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit-box__error {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--stamp-red);
+}
+
+/* ---------- Verdict clipping ---------- */
+
+.clipping {
+  position: relative;
+  border: 1px solid var(--ink);
+  background: rgba(255, 255, 255, 0.4);
+  padding: 24px 20px 28px;
+  overflow: hidden;
+}
+
+.clipping__eyebrow {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.clipping__headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.35;
+  margin: 0 0 20px;
+}
+
+.clipping__meta {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.stamp {
+  display: inline-block;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 3px solid currentColor;
+  border-radius: 4px;
+  transform: rotate(-4deg);
+  margin-bottom: 4px;
+}
+
+.stamp--sarcastic {
+  color: var(--stamp-red);
+  background: rgba(178, 58, 46, 0.06);
+}
+
+.stamp--sincere {
+  color: var(--stamp-green);
+  background: rgba(46, 83, 57, 0.06);
+}
+
+/* ---------- Colophon ---------- */
+
+.colophon {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 420px) {
+  .clipping__headline {
+    font-size: 19px;
+  }
+}
