@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newsroom Desk &middot; The Sarcasm Gazette</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="page">
+
+    <header class="masthead">
+      <p class="masthead__eyebrow">
+        Signed in as {{ username }} &middot;
+        <form action="{{ url_for('logout') }}" method="post" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button type="submit" class="link-button">Log out</button>
+        </form>
+      </p>
+      <h1 class="masthead__title masthead__title--small">The Newsroom Desk</h1>
+      <p class="masthead__tagline">Feed the model more headlines, then send it back to school</p>
+      <div class="masthead__rule"></div>
+    </header>
+
+    {% if model_error %}
+    <div class="notice notice--error">
+      <strong>Presses are down.</strong> {{ model_error }}
+    </div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack">
+        {% for category, message in messages %}
+          <div class="notice {{ 'notice--error' if category == 'error' else 'notice--success' }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="desk">
+
+      <section class="stat-strip">
+        <div class="stat-box">
+          <p class="stat-box__value">{{ additional_count }}</p>
+          <p class="stat-box__label">Headlines added from this desk</p>
+        </div>
+        <div class="stat-box">
+          <p class="stat-box__value">{{ metadata.total_headlines if metadata else '—' }}</p>
+          <p class="stat-box__label">Headlines in the live model</p>
+        </div>
+        <div class="stat-box">
+          <p class="stat-box__value">{{ '%.1f%%' % (metadata.test_accuracy * 100) if metadata else '—' }}</p>
+          <p class="stat-box__label">Test accuracy, last retrain</p>
+        </div>
+      </section>
+      {% if metadata %}
+      <p class="stat-strip__meta">Last retrained {{ metadata.trained_at }} &middot; {{ metadata.additional_headlines }} of those headlines came from this desk.</p>
+      {% endif %}
+
+      <section class="submit-box">
+        <p class="submit-box__label">Add one headline</p>
+        <form action="{{ url_for('admin_add') }}" method="post" class="submit-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <input
+            type="text"
+            name="headline"
+            class="submit-form__input"
+            placeholder="Type a headline&hellip;"
+            required
+          />
+          <div class="radio-row">
+            <label class="radio-pill">
+              <input type="radio" name="is_sarcastic" value="1" required />
+              Sarcastic
+            </label>
+            <label class="radio-pill">
+              <input type="radio" name="is_sarcastic" value="0" />
+              Not sarcastic
+            </label>
+          </div>
+          <button type="submit" class="submit-form__button">Add to training set</button>
+        </form>
+      </section>
+
+      <section class="submit-box">
+        <p class="submit-box__label">Or upload a batch (CSV)</p>
+        <p class="submit-box__hint">File needs a <code>headline</code> column and an <code>is_sarcastic</code> column (0 or 1).</p>
+        <form action="{{ url_for('admin_upload') }}" method="post" enctype="multipart/form-data" class="submit-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <input type="file" name="csv_file" accept=".csv" class="submit-form__input" required />
+          <button type="submit" class="submit-form__button">Upload &amp; add</button>
+        </form>
+      </section>
+
+      <section class="submit-box submit-box--retrain">
+        <p class="submit-box__label">Retrain the live model</p>
+        <p class="submit-box__hint">
+          Combines the original dataset with every headline added on this desk so far
+          ({{ additional_count }} total) and re-fits the model from scratch on all of it —
+          previous data plus whatever's new. The site keeps serving the current model until
+          this finishes, then swaps in the new one automatically.
+        </p>
+        <form action="{{ url_for('admin_retrain') }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button type="submit" class="submit-form__button submit-form__button--accent">
+            Retrain on combined data
+          </button>
+        </form>
+      </section>
+
+    </main>
+
+    <footer class="colophon">
+      <p><a class="colophon__link" href="{{ url_for('index') }}">&larr; Back to the front page</a></p>
+    </footer>
+
+  </div>
+</body>
+</html>

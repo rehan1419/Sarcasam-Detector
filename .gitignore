@@ -3,3 +3,6 @@ __pycache__/
 .venv/
 venv/
 .env
+data/additional_data.csv
+data/metadata.json
+data/.flask_secret_key

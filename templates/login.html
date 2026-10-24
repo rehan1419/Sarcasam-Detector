@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newsroom Login &middot; The Sarcasm Gazette</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="page page--narrow">
+
+    <header class="masthead">
+      <p class="masthead__eyebrow">Staff only</p>
+      <h1 class="masthead__title masthead__title--small">Newsroom Access</h1>
+      <p class="masthead__tagline">Data scientists only, past this desk</p>
+      <div class="masthead__rule"></div>
+    </header>
+
+    <main class="desk">
+      <section class="submit-box">
+        <p class="submit-box__label">Sign in</p>
+        <form action="{{ url_for('login', next=request.args.get('next')) }}" method="post" class="submit-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <input
+            type="text"
+            name="username"
+            class="submit-form__input"
+            placeholder="Username"
+            autocomplete="username"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            class="submit-form__input"
+            placeholder="Password"
+            autocomplete="current-password"
+            required
+          />
+          <button type="submit" class="submit-form__button">Log in</button>
+        </form>
+        {% if error %}
+        <p class="submit-box__error">{{ error }}</p>
+        {% endif %}
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <p><a class="colophon__link" href="{{ url_for('index') }}">&larr; Back to the front page</a></p>
+    </footer>
+
+  </div>
+</body>
+</html>
